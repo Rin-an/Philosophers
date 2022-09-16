@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 13:38:05 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/09/15 00:38:09 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/09/16 11:35:49 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,10 @@ int	parse_args(t_info **info, int argc, char **argv)
 
 void	print(t_philo *philo, char *str)
 {
-	pthread_mutex_lock(&philo->info->lock);
-	printf("%li ms %i %s\n",current_time() - philo->info->init, philo->num, str);
-	pthread_mutex_unlock(&philo->info->lock);
+	if (!philosopher_dead(philo))
+	{
+		pthread_mutex_lock(&philo->info->lock);
+		printf("%li ms %i %s\n",current_time() - philo->info->init, philo->num, str);
+		pthread_mutex_unlock(&philo->info->lock);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 13:22:06 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/09/15 00:35:39 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/09/16 11:33:38 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ typedef struct s_philo
 	bool			is_eating;
 	bool			is_thinking;
 	bool			is_sleeping;
-	pthread_mutex_t	rfork;
-	pthread_mutex_t	lfork;
+	pthread_mutex_t	*rfork;
+	pthread_mutex_t	*lfork;
 	pthread_mutex_t	*fork;
 	struct s_info	*info;
 }	t_philo;
@@ -58,4 +58,5 @@ void	*start_philo(void *vargp);
 void	ft_usleep(int duration, int init);
 int		philosopher_dead(t_philo *philo);
 void	print(t_philo *philo, char *str);
+void	monitor(t_info *info);
 #endif
