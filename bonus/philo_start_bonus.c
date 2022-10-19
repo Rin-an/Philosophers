@@ -1,37 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_start.c                                      :+:      :+:    :+:   */
+/*   philo_start_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 21:23:12 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/09/17 15:49:06 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/10/19 04:48:58 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
-void	put_forks(t_philo *philo)
+void	ft_sem_post(t_info *info)
 {
-	pthread_mutex_unlock(philo->lfork);
-	pthread_mutex_unlock(philo->rfork);
+	sem_post(info->forks);
+	sem_post(info->forks);
 }
 
-void	*start_philo(void *vargp)
+void	start_philo(t_philo *philo)
 {
-	t_philo	*philo;
-
-	philo = (t_philo *) vargp;
 	philo->eat_count = 0;
 	philo->last_eat = time_in_ms(philo->info);
 	if (philo->num % 2 == 0)
 		usleep(10);
-	while (1)
+	while (philo->info->total != philo->info->num_philo && \
+			!philo->info->dead)
 	{
-		pthread_mutex_lock(philo->lfork);
+		sem_wait(philo->info->forks);
 		print(philo, "has taken a fork.");
-		pthread_mutex_lock(philo->rfork);
+		sem_wait(philo->info->forks);
 		print(philo, "has taken a fork.");
 		print(philo, "is eating.");
 		philo->eat_count++;
@@ -39,10 +37,9 @@ void	*start_philo(void *vargp)
 			philo->info->total++;
 		ft_usleep(current_time() + philo->info->time_eat);
 		philo->last_eat = time_in_ms(philo->info);
-		put_forks(philo);
+		ft_sem_post(philo->info);
 		print(philo, "is sleeping.");
 		ft_usleep(current_time() + philo->info->time_sleep);
 		print(philo, "is thinking.");
 	}
-	return (NULL);
 }

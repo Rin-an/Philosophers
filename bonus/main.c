@@ -6,11 +6,11 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 13:17:42 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/09/20 15:34:12 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/10/19 04:48:56 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 long	current_time(void)
 {
@@ -40,11 +40,14 @@ int	init_philo(t_info **info)
 	{
 		(*info)->philo[i].num = i + 1;
 		(*info)->philo[i].info = *info;
-		(*info)->philo[i].lfork = &(*info)->fork[i];
-		(*info)->philo[i].rfork = &(*info)->fork[(i + 1) % (*info)->num_philo];
-		if (pthread_create(&((*info)->philo[i].id), NULL, &start_philo, \
-					&((*info)->philo[i])))
-			return (1);
+		(*info)->philo[i].pid = fork();
+		if ((*info)->philo[i].pid == 0)
+		{
+			start_philo(&(*info)->philo[i]);
+			pthread_create(&((*info)->philo[i].id), NULL, &monitor, \
+					&((*info)->philo[i]));
+			pthread_detach((*info)->philo[i].id);
+		}
 		usleep(100);
 	}
 	return (0);
@@ -69,9 +72,9 @@ int	main(int argc, char **argv)
 	else
 	{
 		printf("Too many arguments or too few arguments!\n");
-		printf("./philo time_to_die time_to_eat time_to_sleep"
+		printf("./philo_bonus time_to_die time_to_eat time_to_sleep"
 			" [number_must_eat]\n");
-		printf("Example: ./philo 4 100 200 200 2\n");
+		printf("Example: ./philo_bonus 4 100 200 200 2\n");
 	}
 	return (0);
 }

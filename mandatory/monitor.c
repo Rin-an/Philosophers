@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_eat_sleep.c                                  :+:      :+:    :+:   */
+/*   monitor.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 21:57:52 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/09/16 15:19:35 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/09/17 18:10:50 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,21 @@
 void	monitor(t_info *info)
 {
 	int	i;
-	int	count;
 
-	count = 0;
 	while (1)
 	{
-		pthread_mutex_lock(&info->lock);
+		if (info->total == info->num_philo)
+			return ;
 		i = -1;
 		while (++i < info->num_philo)
 		{
-			if ((current_time() - info->init) - info->philo[i].last_eat >= info->time_die)
+			if (time_in_ms(info) - info->philo[i].last_eat > info->time_die)
 			{
-				info->dead = 1;
-				printf("%li ms %i died.\n", current_time() - \
-						info->init, i + 1);
-				usleep(100);
-				pthread_mutex_unlock(&info->lock);
+				pthread_mutex_lock(&info->lock);
+				printf("%li ms %i died.\n", current_time() - info->init, i + 1);
 				return ;
 			}
 		}
-		pthread_mutex_unlock(&info->lock);
-		usleep(100);
+		usleep(50);
 	}
 }

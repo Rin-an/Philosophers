@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 13:38:05 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/09/20 15:38:34 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/10/19 04:49:01 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 int	ft_atoi(char *str)
 {
@@ -42,19 +42,12 @@ int	check_args(t_info *info, int argc)
 	return (0);
 }
 
-int	init_thread_mutex(t_info **info)
+int	init_thread_sem(t_info **info)
 {
-	int	i;
-
-	(*info)->fork = malloc(sizeof(pthread_mutex_t) * (*info)->num_philo);
+	(*info)->forks = sem_open("forks", O_CREAT, (*info)->num_philo);
+	(*info)->lock = sem_open("lock", O_CREAT);
 	(*info)->philo = malloc(sizeof(t_philo) * (*info)->num_philo);
-	if (!((*info)->fork || (*info)->philo))
-		return (1);
-	i = -1;
-	while (++i < (*info)->num_philo)
-		if (pthread_mutex_init(&(*info)->fork[i], NULL) != 0)
-			return (1);
-	if (pthread_mutex_init(&(*info)->lock, NULL) != 0)
+	if (!(*info)->philo)
 		return (1);
 	return (0);
 }
@@ -73,6 +66,7 @@ int	parse_args(t_info **info, int argc, char **argv)
 	(*info)->time_sleep = ft_atoi(argv[4]);
 	(*info)->total = 0;
 	(*info)->num_eat = -1;
+	(*info)->dead = 0;
 	if (argc == 6)
 		(*info)->num_eat = ft_atoi(argv[5]);
 	if (check_args(*info, argc))
@@ -80,15 +74,15 @@ int	parse_args(t_info **info, int argc, char **argv)
 		free(*info);
 		return (1);
 	}
-	if (init_thread_mutex(info))
+	if (init_thread_sem(info))
 		return (1);
 	return (0);
 }
 
 void	print(t_philo *philo, char *str)
 {
-	pthread_mutex_lock(&philo->info->lock);
+	sem_wait(philo->info->lock);
 	printf("%li ms %i %s\n", current_time() - philo->info->init, \
 		philo->num, str);
-	pthread_mutex_unlock(&philo->info->lock);
+	sem_post(philo->info->lock);
 }
