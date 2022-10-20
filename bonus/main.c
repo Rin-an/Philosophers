@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 13:17:42 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/10/19 04:48:56 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/10/20 04:50:37 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,28 +31,18 @@ long	time_in_ms(t_info *info)
 	return (current_time() - info->init);
 }
 
-int	init_philo(t_info **info)
+int init_philo(t_info **info)
 {
-	int	i;
-
-	i = -1;
-	while (++i < (*info)->num_philo)
-	{
-		(*info)->philo[i].num = i + 1;
-		(*info)->philo[i].info = *info;
-		(*info)->philo[i].pid = fork();
-		if ((*info)->philo[i].pid == 0)
-		{
-			start_philo(&(*info)->philo[i]);
-			pthread_create(&((*info)->philo[i].id), NULL, &monitor, \
-					&((*info)->philo[i]));
-			pthread_detach((*info)->philo[i].id);
-		}
-		usleep(100);
-	}
-	return (0);
+	(*info)->pid = malloc(sizeof(pid_t) * (*info)->num_philo);
+	if (!(*info)->pid)
+		return (1);
+    //process_start(info);
+	init_process(info);
+    wait_process(*info);
+	kill_process(*info);
+    destroy_all(*info);
+    return (0);
 }
-
 int	main(int argc, char **argv)
 {
 	t_info	*info;
@@ -66,8 +56,6 @@ int	main(int argc, char **argv)
 		info->init = current_time();
 		if (init_philo(&info))
 			return (1);
-		monitor(info);
-		destroy_all(info);
 	}
 	else
 	{

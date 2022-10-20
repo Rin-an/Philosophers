@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 13:38:05 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/10/19 04:49:01 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/10/19 19:41:25 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ int	parse_args(t_info **info, int argc, char **argv)
 	(*info)->time_sleep = ft_atoi(argv[4]);
 	(*info)->total = 0;
 	(*info)->num_eat = -1;
-	(*info)->dead = 0;
 	if (argc == 6)
 		(*info)->num_eat = ft_atoi(argv[5]);
 	if (check_args(*info, argc))
