@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_bonus.c                                      :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 13:38:05 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/10/19 19:41:25 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/10/22 08:56:20 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,23 +42,34 @@ int	check_args(t_info *info, int argc)
 	return (0);
 }
 
-int	init_thread_sem(t_info **info)
+int	init_philo_sem(t_info **info)
 {
-	(*info)->forks = sem_open("forks", O_CREAT, (*info)->num_philo);
-	(*info)->lock = sem_open("lock", O_CREAT);
+	int	i;
+
+	i = -1;
+	sem_unlink("forks");
+	sem_unlink("lock");
+	(*info)->fork = sem_open("forks", O_CREAT, 0600, (*info)->num_philo);
+	(*info)->lock = sem_open("lock", O_CREAT, 0600, 1);
+	if ((*info)->lock == SEM_FAILED || (*info)->fork == SEM_FAILED)
+		destroy_all(*info);
 	(*info)->philo = malloc(sizeof(t_philo) * (*info)->num_philo);
 	if (!(*info)->philo)
 		return (1);
+	while (++i < (*info)->num_philo)
+	{
+		(*info)->philo[i].num = i + 1;
+		(*info)->philo[i].info = *info;
+		(*info)->philo[i].eat_count = 0;
+		(*info)->philo[i].dead = 0;
+	}
 	return (0);
 }
 
 int	parse_args(t_info **info, int argc, char **argv)
 {
-	int	i;
-
-	i = -1;
-	*info = malloc(sizeof(t_info));
-	if (!info)
+	(*info) = malloc(sizeof(t_info));
+	if (!*info)
 		return (1);
 	(*info)->num_philo = ft_atoi(argv[1]);
 	(*info)->time_die = ft_atoi(argv[2]);
@@ -73,7 +84,10 @@ int	parse_args(t_info **info, int argc, char **argv)
 		free(*info);
 		return (1);
 	}
-	if (init_thread_sem(info))
+	(*info)->pid = malloc(sizeof(pid_t) * (*info)->num_philo);
+	if (!(*info)->pid)
+		return (1);
+	if (init_philo_sem(info))
 		return (1);
 	return (0);
 }

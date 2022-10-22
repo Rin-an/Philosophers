@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 13:17:42 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/10/20 04:50:37 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/10/22 10:12:36 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,10 @@ long	time_in_ms(t_info *info)
 	return (current_time() - info->init);
 }
 
-int init_philo(t_info **info)
-{
-	(*info)->pid = malloc(sizeof(pid_t) * (*info)->num_philo);
-	if (!(*info)->pid)
-		return (1);
-    //process_start(info);
-	init_process(info);
-    wait_process(*info);
-	kill_process(*info);
-    destroy_all(*info);
-    return (0);
-}
 int	main(int argc, char **argv)
 {
 	t_info	*info;
+	int		i;
 
 	if (argc == 5 || argc == 6)
 	{
@@ -54,15 +43,24 @@ int	main(int argc, char **argv)
 		if (parse_args(&info, argc, argv))
 			return (1);
 		info->init = current_time();
-		if (init_philo(&info))
-			return (1);
+		create_process(&info);
+		//wait_process(info);
+		i = -1;
+		while (waitpid(0,0,0) != 0)
+		{
+			printf("i = %i\n", i);
+			//waitpid(info->pid[i], 0, 0);
+		}
+		printf("DID IT EVER EVEN GET HERE???????????\n");
+		kill_process(info);
+		destroy_all(info);
 	}
 	else
 	{
 		printf("Too many arguments or too few arguments!\n");
-		printf("./philo_bonus time_to_die time_to_eat time_to_sleep"
+		printf("./philo time_to_die time_to_eat time_to_sleep"
 			" [number_must_eat]\n");
-		printf("Example: ./philo_bonus 4 100 200 200 2\n");
+		printf("Example: ./philo 4 100 200 200 2\n");
 	}
 	return (0);
 }

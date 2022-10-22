@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 13:22:06 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/10/20 04:50:43 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/10/22 05:35:09 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,20 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/time.h>
-# include <semaphore.h>
 # include <pthread.h>
+# include <sys/wait.h>
+# include <semaphore.h>
 # include <signal.h>
+
+struct	s_info;
 
 typedef struct s_philo
 {
 	pthread_t		id;
 	int				num;
 	int				eat_count;
-	int				dead;
 	long			last_eat;
+	int				dead;
 	struct s_info	*info;
 }	t_philo;
 
@@ -39,7 +42,7 @@ typedef struct s_info
 	int				num_eat;
 	long			init;
 	int				total;
-	sem_t			*forks;
+	sem_t			*fork;
 	sem_t			*lock;
 	t_philo			*philo;
 	pid_t			*pid;
@@ -54,8 +57,7 @@ void	ft_usleep(long duration);
 void	print(t_philo *philo, char *str);
 void	*monitor(void *vargp);
 void	destroy_all(t_info *info);
-void	process_start(t_info **info, int i);
-void	init_process(t_info **info);
-void	wait_process(t_info *info);
+void	create_process(t_info **info);
 void	kill_process(t_info *info);
+void	wait_process(t_info *info);
 #endif

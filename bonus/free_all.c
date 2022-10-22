@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_all_bonus.c                                   :+:      :+:    :+:   */
+/*   free_all.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 18:15:27 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/10/20 01:21:30 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/10/22 04:02:03 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ void	destroy_all(t_info *info)
 	int	i;
 
 	i = -1;
-	while (++i < info->num_philo)
-		free(&info->pid[i]);
-	sem_close(info->forks);
-	sem_close(info->lock);
 	sem_unlink("forks");
 	sem_unlink("lock");
+	sem_close(info->lock);
+	sem_close(info->fork);
 	free(info->philo);
+	free(info->pid);
 	free(info);
+	exit(0);
 }
