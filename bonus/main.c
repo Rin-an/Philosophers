@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 13:17:42 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/10/22 10:12:36 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/10/23 16:32:56 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ long	time_in_ms(t_info *info)
 int	main(int argc, char **argv)
 {
 	t_info	*info;
-	int		i;
 
 	if (argc == 5 || argc == 6)
 	{
@@ -44,14 +43,8 @@ int	main(int argc, char **argv)
 			return (1);
 		info->init = current_time();
 		create_process(&info);
-		//wait_process(info);
-		i = -1;
-		while (waitpid(0,0,0) != 0)
-		{
-			printf("i = %i\n", i);
-			//waitpid(info->pid[i], 0, 0);
-		}
-		printf("DID IT EVER EVEN GET HERE???????????\n");
+		while (!waitpid(-1, 0, 0))
+			;
 		kill_process(info);
 		destroy_all(info);
 	}

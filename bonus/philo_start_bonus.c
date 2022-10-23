@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_start.c                                      :+:      :+:    :+:   */
+/*   philo_start_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 21:23:12 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/10/22 08:55:00 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/10/23 16:30:36 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ void	start_philo(t_philo *philo)
 		print(philo, "has taken a fork.");
 		print(philo, "is eating.");
 		philo->eat_count++;
-		/*if (philo->eat_count == philo->info->num_eat)
-			philo->info->total++;*/
 		ft_usleep(current_time() + philo->info->time_eat);
 		philo->last_eat = time_in_ms(philo->info);
 		put_forks(philo);

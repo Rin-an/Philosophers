@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 13:38:05 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/10/22 08:56:20 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/10/23 16:28:43 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ int	init_philo_sem(t_info **info)
 		(*info)->philo[i].num = i + 1;
 		(*info)->philo[i].info = *info;
 		(*info)->philo[i].eat_count = 0;
-		(*info)->philo[i].dead = 0;
 	}
 	return (0);
 }
@@ -75,7 +74,6 @@ int	parse_args(t_info **info, int argc, char **argv)
 	(*info)->time_die = ft_atoi(argv[2]);
 	(*info)->time_eat = ft_atoi(argv[3]);
 	(*info)->time_sleep = ft_atoi(argv[4]);
-	(*info)->total = 0;
 	(*info)->num_eat = -1;
 	if (argc == 6)
 		(*info)->num_eat = ft_atoi(argv[5]);

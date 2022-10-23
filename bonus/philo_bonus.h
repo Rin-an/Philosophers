@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 13:22:06 by ssadiki           #+#    #+#             */
-/*   Updated: 2022/10/22 05:35:09 by ssadiki          ###   ########.fr       */
+/*   Updated: 2022/10/23 16:28:12 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ typedef struct s_philo
 	int				num;
 	int				eat_count;
 	long			last_eat;
-	int				dead;
 	struct s_info	*info;
 }	t_philo;
 
@@ -41,7 +40,6 @@ typedef struct s_info
 	int				time_sleep;
 	int				num_eat;
 	long			init;
-	int				total;
 	sem_t			*fork;
 	sem_t			*lock;
 	t_philo			*philo;
@@ -59,5 +57,4 @@ void	*monitor(void *vargp);
 void	destroy_all(t_info *info);
 void	create_process(t_info **info);
 void	kill_process(t_info *info);
-void	wait_process(t_info *info);
 #endif
